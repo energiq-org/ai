@@ -1,4 +1,6 @@
 from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain.chains import RetrievalQA
 from dotenv import load_dotenv
 
 from helpers.rag_helper import *
