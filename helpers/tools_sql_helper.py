@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, inspect, text
 
-database_file_path = "db/ev_charging.db"
+from helpers.rag import *
+
+database_file_path = "ev_charging.db"
 engine = create_engine(f"sqlite:///{database_file_path}")
 
 
@@ -315,6 +317,11 @@ def reserveSession(
         return {"status": "error", "message": str(e)}
 
 
+def retrieveEVKnowledge(query: str, user_id: str) -> str:
+    """Answer general EV-related questions using the knowledge base"""
+    return rag(query)
+
+
 tools_sql = [
     {
         "type": "function",
@@ -574,6 +581,27 @@ tools_sql = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "retrieveEVKnowledge",
+            "description": retrieveEVKnowledge.__doc__,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "User question related to electric vehicles, charging, stations, connectors, etc.",
+                    },
+                    "user_id": {
+                        "type": "string",
+                        "description": "The unique identifier of the user."
+                    }
+                },
+                "required": ["query", "user_id"],
+            },
+        },
+    },
 ]
 
 
@@ -582,6 +610,7 @@ You are an AI assistant specialized in electric vehicle topics and user-specific
 
 1. **Domain Scope**
    • Only answer questions related to electric vehicles (models, charging types, stations), user driving history, session reservations, connectors, pricing, availability, and related dataset information.
+   • You must only use the provided tools and functions to answer the user. If the user asks any general EV-related question (e.g., about charging types, connectors, or station tech), call the retrieveEVKnowledge tool with their question as the input.
    • Do not answer any questions outside this scope.
 
 2. **Data Source Enforcement**

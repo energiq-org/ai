@@ -5,6 +5,9 @@ from langchain_community.vectorstores import Chroma
 
 import os
 
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 def load_documents(data_path="data"):
     docs = []
     for filename in os.listdir(data_path):

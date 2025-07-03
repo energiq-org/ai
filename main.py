@@ -6,7 +6,6 @@ from openai import OpenAI
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-
 from helpers.tools_sql_helper import *
 from helpers.chat_history_helper import *
 
@@ -56,6 +55,7 @@ def chat_endpoint(chat: ChatRequest):
         "getMostEfficientMonth": getMostEfficientMonth,
         "getAvgSessionStats": getAvgSessionStats,
         "reserveSession": reserveSession,
+        "retrieveEVKnowledge": retrieveEVKnowledge
     }
 
     if tool_calls:
@@ -80,7 +80,9 @@ def chat_endpoint(chat: ChatRequest):
             function_name = tool_call.function.name
             function_to_call = available_functions[function_name]
             function_args = json.loads(tool_call.function.arguments)
+            
             function_args["user_id"] = user_id
+            
             function_response = function_to_call(**function_args)
 
             tool_msg = {
