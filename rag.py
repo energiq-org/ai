@@ -1,7 +1,7 @@
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
 
-from rag_helper import *
+from helpers.rag_helper import *
 
 load_dotenv()
 
