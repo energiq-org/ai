@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import create_engine, inspect, text
 
-from helpers.rag import *
+from rag import *
 
 database_file_path = "ev_charging.db"
 engine = create_engine(f"sqlite:///{database_file_path}")
