@@ -114,7 +114,7 @@ def getMonthlyEnergyPerVehicle(
     user_id: str, today: str, n_months: str, n_vehicles: str = 50
 ):
     """
-    Get the total kilowatt-hours (kWh) consumed by the user for each of the last n months.
+    Get the total kilowatt-hours (kWh) consumed by the user for each of the last n months per vehicle.
     """
     try:
         query = f"""
