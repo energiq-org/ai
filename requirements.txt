@@ -8,6 +8,8 @@ sqlalchemy
 openai
 langchain
 langchain-chroma
+langchain-community
+langchain-openai
 chromadb
 pypdf
 python-dotenv
