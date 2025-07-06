@@ -1,7 +1,6 @@
 __pycache__
 vectorstore
 .env
-ev_charging.db
 ngrok.exe
 test.py
 graduation_project.ipynb
