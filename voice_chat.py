@@ -8,7 +8,7 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-whisper_model = whisper.load_model("small")
+whisper_model = whisper.load_model("base")
 
 
 def stt(filepath: str) -> str:
