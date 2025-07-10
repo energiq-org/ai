@@ -3,9 +3,6 @@ import json
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from fastapi import FastAPI
-from pydantic import BaseModel
-
 from helpers.tools_sql_helper import *
 from helpers.chat_history_helper import *
 
@@ -14,19 +11,7 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-app = FastAPI()
-
-
-class ChatRequest(BaseModel):
-    user_id: str
-    message: str
-
-
-@app.post("/chat")
-def chat_endpoint(chat: ChatRequest):
-    user_id = chat.user_id
-    user_input = chat.message
-
+def chat_bot(user_id: str, user_input: str) -> str:
     append_message(user_id, "user", user_input)
 
     messages = get_history(user_id)
@@ -102,18 +87,18 @@ def chat_endpoint(chat: ChatRequest):
         assistant_final = final_response.choices[0].message
         append_message(user_id, "assistant", assistant_final.content)
 
-        return {"reply": assistant_final.content}
+        return assistant_final.content
 
     else:
         # No tool used, just direct assistant response
         append_message(user_id, "assistant", response_message.content)
-        return {"reply": response_message.content}
-
-
+        return response_message.content
+    
+    
 if __name__ == "__main__":
     # Set your actual user ID
     user_id = "73f52a4b-fd1b-4119-9233-ff8a956f5512"
 
     # New user input
-    user_input = f"""what is the average transaction that for the last 4 months"""
+    user_input = f"""what is the average transaction for the last 4 months"""
     # print(chat_bot(user_id, user_input))
