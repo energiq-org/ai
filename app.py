@@ -26,13 +26,14 @@ def chat_endpoint(chat: ChatRequest):
 class VoiceRequest(BaseModel):
     user_id: str
     voice_input: UploadFile
+    output_voice_type: str = "alloy" # voices = [alloy, echo, fable, onyx, nova, shimmer]
     
 @app.post("/voice")
 async def voice_endpoint(voice: VoiceRequest):
     user_id = voice.user_id
     file = voice.voice_input
+    output_voice_type = voice.output_voice_type
     ext = ".wav"
-    voice_type = "alloy" # voices = [alloy, echo, fable, onyx, nova, shimmer]
     
     if not file.filename.endswith(ext):
         return {"error": f"Only {ext} files are supported"}
@@ -52,7 +53,7 @@ async def voice_endpoint(voice: VoiceRequest):
     
     # Convert the response to voice
     try:
-        audio_data = tts(response, voice)
+        audio_data = tts(response, output_voice_type, True)
         return StreamingResponse(io.BytesIO(audio_data), media_type="audio/mpeg")
     except Exception as e:
         return {"error": str(e)}
