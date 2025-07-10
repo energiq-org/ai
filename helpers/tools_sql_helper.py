@@ -595,8 +595,8 @@ tools_sql = [
                     },
                     "user_id": {
                         "type": "string",
-                        "description": "The unique identifier of the user."
-                    }
+                        "description": "The unique identifier of the user.",
+                    },
                 },
                 "required": ["query", "user_id"],
             },
@@ -634,7 +634,7 @@ You are an AI assistant specialized in electric vehicle topics and user-specific
    • Format answers with markdown headings and bullet points as appropriate.
    • Cite your RAG‑retrieved facts with inline references using the retrieval function metadata.
 
-7. **Reservation Flow Example**
+6. **Reservation Flow Example**
    • User: “Reserve a charging session at Station A tomorrow 3 pm.”
    • Assistant:
      1. Calls `find_station(name="Station A")` → returns station object.
@@ -646,7 +646,7 @@ You are an AI assistant specialized in electric vehicle topics and user-specific
         - Connector: CCS
         - Enjoy your charging session!
 
-8. **Session History Example**
+7. **Session History Example**
    • User: “Show my last five charging sessions.”
    • Assistant:
      1. Calls `list_user_sessions(user, limit=5)` → returns session list.
@@ -654,7 +654,7 @@ You are an AI assistant specialized in electric vehicle topics and user-specific
         | Date | Station | Duration | Energy (kWh) | Cost |
         etc.
 
-9. **Station Search Example**
+8. **Station Search Example**
    • User: “Where are nearby fast‑charge stations?”
    • Assistant:
      1. Calls `find_nearby_stations(user_location, connector="DC fast", radius_km=10)`
