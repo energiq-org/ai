@@ -1,4 +1,3 @@
-import whisper
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
@@ -8,12 +7,14 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-whisper_model = whisper.load_model("base")
-
-
 def stt(filepath: str) -> str:
-    response = whisper_model.transcribe(filepath, fp16=False)
-    return response["text"]
+    with open(filepath, "rb") as audio_file:
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file,
+            response_format="text"  # You can use 'json' or 'verbose_json' too
+        )
+    return transcript
 
 
 def tts(text: str, voice: str = "alloy", isDeployed: bool = False):
