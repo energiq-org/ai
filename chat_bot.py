@@ -101,4 +101,4 @@ if __name__ == "__main__":
 
     # New user input
     user_input = f"""what is the average transaction for the last 4 months"""
-    # print(chat_bot(user_id, user_input))
+    print(chat_bot(user_id, user_input))
