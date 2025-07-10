@@ -8,10 +8,10 @@ sqlalchemy
 openai
 openai-whisper
 langchain
+chromadb
 langchain-chroma
 langchain-community
 langchain-openai
-chromadb
 pypdf
 python-dotenv
 pydantic<2.0
