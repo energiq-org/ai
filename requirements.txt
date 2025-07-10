@@ -6,6 +6,7 @@ numpy
 pandas
 sqlalchemy
 openai
+openai-whisper
 langchain
 langchain-chroma
 langchain-community
