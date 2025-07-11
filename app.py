@@ -1,14 +1,13 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import tempfile
 import io
-
+import os
 from chat_bot import chat_bot
 from voice_chat import stt, tts
 
 app = FastAPI()
-
 
 class ChatRequest(BaseModel):
     user_id: str
@@ -18,21 +17,16 @@ class ChatRequest(BaseModel):
 def chat_endpoint(chat: ChatRequest):
     user_id = chat.user_id
     user_input = chat.message
-
     response = chat_bot(user_id, user_input)
     return {"reply": response}
 
-
-class VoiceRequest(BaseModel):
-    user_id: str
-    voice_input: UploadFile
-    output_voice_type: str = "alloy" # voices = [alloy, echo, fable, onyx, nova, shimmer]
-    
 @app.post("/voice")
-async def voice_endpoint(voice: VoiceRequest):
-    user_id = voice.user_id
-    file = voice.voice_input
-    output_voice_type = voice.output_voice_type
+async def voice_endpoint(
+    user_id: str = Form(),
+    voice_input: UploadFile = File(),
+    output_voice_type: str = Form(default="alloy")  # voices = [alloy, echo, fable, onyx, nova, shimmer]
+):
+    file = voice_input
     ext = ".wav"
     
     if not file.filename.endswith(ext):
@@ -43,8 +37,12 @@ async def voice_endpoint(voice: VoiceRequest):
         with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
             tmp.write(await file.read())
             tmp_path = tmp.name
-
+        
         transcription = stt(tmp_path)
+        
+        # Clean up the temporary file
+        os.unlink(tmp_path)
+        
     except Exception as e:
         return {"error": str(e)}
     
