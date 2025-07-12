@@ -5,6 +5,7 @@ from openai import OpenAI
 
 from helpers.tools_sql_helper import *
 from helpers.chat_history_helper import *
+from helpers.instructions_helper import get_system_instructions
 
 load_dotenv()
 
@@ -12,6 +13,8 @@ api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
 def chat_bot(user_id: str, user_input: str) -> str:
+    instructions = get_system_instructions(user_id)
+
     append_message(user_id, "user", user_input)
 
     messages = get_history(user_id)
@@ -79,6 +82,8 @@ def chat_bot(user_id: str, user_input: str) -> str:
             append_message(user_id, "tool", tool_msg)
 
         messages = get_history(user_id)
+        if not any(m["role"] == "system" for m in messages):
+            messages.insert(0, {"role": "system", "content": instructions})
 
         final_response = client.chat.completions.create(
             model="gpt-4o-mini", messages=messages, tools=tools_sql, tool_choice="none"
