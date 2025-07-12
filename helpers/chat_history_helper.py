@@ -1,8 +1,9 @@
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 import json
 
-database_file_path = 'ev_charging.db'
-engine = create_engine(f'sqlite:///{database_file_path}')
+from helpers.database_connector import connect_to_db
+
+engine = connect_to_db()
 
 def append_message(user_id, role, content):
     with engine.begin() as conn:

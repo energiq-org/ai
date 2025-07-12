@@ -1,12 +1,11 @@
 import numpy as np
 import pandas as pd
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import inspect, text
 
+from helpers.database_connector import connect_to_db
 from rag import *
 
-database_file_path = "ev_charging.db"
-engine = create_engine(f"sqlite:///{database_file_path}")
-
+engine = connect_to_db()
 
 def getMonthlySpending(user_id: str, start_of_period: str, end_of_period: str):
     """

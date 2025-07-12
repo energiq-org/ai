@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
 from datetime import datetime
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
-database_file_path = "ev_charging.db"
-engine = create_engine(f"sqlite:///{database_file_path}")
+from helpers.database_connector import connect_to_db
+
+engine = connect_to_db()
 
 def get_user_name(user_id: str):
     try:
