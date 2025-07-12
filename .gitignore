@@ -1,6 +1,8 @@
 __pycache__
 vectorstore
+agent-env
 .env
 ngrok.exe
 test.py
 graduation_project.ipynb
+*.wav
