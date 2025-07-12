@@ -32,6 +32,7 @@ def chat_bot(user_id: str, user_input: str) -> str:
     tool_calls = response_message.tool_calls
 
     available_functions = {
+        "getVehiclesData": getVehiclesData,
         "getMonthlySpending": getMonthlySpending,
         "getAvgTransactionAmount": getAvgTransactionAmount,
         "getMaxTransactions": getMaxTransactions,

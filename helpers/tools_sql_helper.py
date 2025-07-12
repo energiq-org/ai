@@ -7,6 +7,47 @@ from rag import *
 
 engine = connect_to_db()
 
+
+def getVehiclesData(user_id: str):
+    """
+    Retrieve vehicles data of the user.
+    """
+    try:
+        query = f"""
+        SELECT
+            user_vehicles.connector_type,
+            user_vehicles.actual_battery,
+
+            vehicles.model,
+            vehicles.range,
+            vehicles.efficiency,
+            vehicles.weight,
+            vehicles.acceleration,
+            vehicles.one_stop_range,
+            vehicles.battery,
+            vehicles.fastcharge,
+            vehicles.towing,
+            vehicles.cargo_volume
+
+        FROM users
+        JOIN user_vehicles ON users.id = user_vehicles.user_id
+        JOIN vehicles ON user_vehicles.vehicle_id = vehicles.id
+
+        WHERE users.id = '{user_id}';
+        """
+        query = text(query)
+
+        with engine.connect() as connection:
+            result = pd.read_sql_query(query, connection)
+        if not result.empty:
+            return result.to_dict("records")[0]
+        else:
+            return np.nan
+    except Exception as e:
+        print(e)
+        return np.nan
+
+
 def getMonthlySpending(user_id: str, start_of_period: str, end_of_period: str):
     """
     Calculate the total amount the user spent on charging sessions in a specific period month.
@@ -322,6 +363,24 @@ def retrieveEVKnowledge(query: str, user_id: str) -> str:
 
 
 tools_sql = [
+    {
+        "type": "function",
+        "function": {
+            "name": "getVehiclesData",
+            "description": getVehiclesData.__doc__,
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "string",
+                        "description": "The unique identifier of the user.",
+                    }
+                },
+                "required": ["user_id"],
+            },
+        },
+    },
+    
     {
         "type": "function",
         "function": {
