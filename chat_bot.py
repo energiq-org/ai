@@ -1,5 +1,6 @@
 import os
 import json
+from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -12,9 +13,12 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-def chat_bot(user_id: str, user_input: str) -> str:
+def chat_bot(user_id: str, user_input: str, context: Optional[Dict[str, Any]] = None) -> str:
     instructions = get_system_instructions(user_id)
-
+    
+    if context:
+        instructions += f"\n context: {context}"
+    
     append_message(user_id, "user", user_input)
 
     messages = get_history(user_id)
